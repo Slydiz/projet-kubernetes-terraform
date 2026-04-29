@@ -43,6 +43,17 @@ resource "kubernetes_deployment" "n8n" {
             container_port = 5678
           }
 
+          resources {
+            requests = {
+              cpu    = "100m"
+              memory = "128Mi"
+            }
+            limits = {
+              cpu    = "500m"
+              memory = "512Mi"
+            }
+          }
+
           env {
             name  = "GENERIC_TIMEZONE"
             value = "Europe/Paris"
@@ -373,6 +384,17 @@ resource "kubernetes_deployment" "grafana" {
 
           port {
             container_port = 3000
+          }
+
+          resources {
+            requests = {
+              cpu    = "100m"
+              memory = "128Mi"
+            }
+            limits = {
+              cpu    = "500m"
+              memory = "512Mi"
+            }
           }
 
           env {
@@ -976,6 +998,68 @@ resource "kubernetes_ingress_v1" "portainer" {
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+############################
+## HPA
+############################
+
+resource "kubernetes_horizontal_pod_autoscaler_v2" "n8n" {
+  metadata {
+    name      = "n8n"
+    namespace = kubernetes_namespace.apps.metadata[0].name
+  }
+
+  spec {
+    min_replicas = 1
+    max_replicas = 3
+
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = kubernetes_deployment.n8n.metadata[0].name
+    }
+
+    metric {
+      type = "Resource"
+      resource {
+        name = "cpu"
+        target {
+          type                = "Utilization"
+          average_utilization = 70
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_horizontal_pod_autoscaler_v2" "grafana" {
+  metadata {
+    name      = "grafana"
+    namespace = kubernetes_namespace.monitoring.metadata[0].name
+  }
+
+  spec {
+    min_replicas = 1
+    max_replicas = 3
+
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = kubernetes_deployment.grafana.metadata[0].name
+    }
+
+    metric {
+      type = "Resource"
+      resource {
+        name = "cpu"
+        target {
+          type                = "Utilization"
+          average_utilization = 70
         }
       }
     }
