@@ -1,6 +1,6 @@
 # Projet Kubernetes / Terraform
 
-Déploiement automatisé d'une stack complète sur un cluster K3d multi-nœud via Terraform et GitHub Actions.
+Déploiement automatisé d'une stack complète sur un cluster K3s (Kubernetes mono-nœud) via Terraform et GitHub Actions.
 
 ---
 
@@ -13,10 +13,7 @@ GitHub Actions (CI/CD)
    Terraform (IaC)
         │
         ▼
-  Cluster K3d (72.60.206.107)
-  ├── k3d-mycluster-server-0  (control-plane)
-  ├── k3d-mycluster-agent-0   (worker)
-  │
+  Cluster K3s (72.60.206.107)
   ├── Namespace apps
   │   └── n8n
   ├── Namespace monitoring
@@ -99,11 +96,9 @@ Le secret `KUBECONFIG` contient le fichier kubeconfig du cluster K3s encodé en 
 
 ## Prérequis
 
-- Cluster K3d opérationnel (1 serveur + 1 agent)
+- Cluster K3s opérationnel
 - Secret GitHub `KUBECONFIG` configuré (Settings → Secrets and variables → Actions)
 - Terraform >= 1.5.0
-
-> **Note** : le cluster multi-nœud est simulé via K3d (K3s dans Docker) sur un seul VPS faute de ressources pour un second serveur physique. Le cluster expose bien 2 nœuds distincts (`control-plane` + `worker`).
 
 ---
 
