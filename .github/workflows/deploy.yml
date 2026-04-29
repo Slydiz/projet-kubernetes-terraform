@@ -10,6 +10,9 @@ jobs:
     name: Terraform Apply
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,3 +33,11 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -var="kubeconfig_path=$HOME/.kube/config"
+
+      - name: Save Terraform state
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add terraform.tfstate terraform.tfstate.backup 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "ci: update terraform state [skip ci]"
+          git push
