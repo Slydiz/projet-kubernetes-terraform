@@ -31,6 +31,57 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Import existing resources
+        run: |
+          KP="-var=kubeconfig_path=$HOME/.kube/config"
+          # Namespaces
+          terraform import $KP kubernetes_namespace.apps apps 2>/dev/null || true
+          terraform import $KP kubernetes_namespace.monitoring monitoring 2>/dev/null || true
+          terraform import $KP kubernetes_namespace.prod prod 2>/dev/null || true
+          # n8n
+          terraform import $KP kubernetes_deployment.n8n apps/n8n 2>/dev/null || true
+          terraform import $KP kubernetes_service.n8n apps/n8n 2>/dev/null || true
+          terraform import $KP kubernetes_ingress_v1.n8n apps/n8n 2>/dev/null || true
+          # Prometheus
+          terraform import $KP kubernetes_config_map.prometheus monitoring/prometheus-config 2>/dev/null || true
+          terraform import $KP kubernetes_cluster_role.prometheus prometheus 2>/dev/null || true
+          terraform import $KP kubernetes_service_account.prometheus monitoring/prometheus 2>/dev/null || true
+          terraform import $KP kubernetes_cluster_role_binding.prometheus prometheus 2>/dev/null || true
+          terraform import $KP kubernetes_deployment.prometheus monitoring/prometheus 2>/dev/null || true
+          terraform import $KP kubernetes_service.prometheus monitoring/prometheus 2>/dev/null || true
+          terraform import $KP kubernetes_ingress_v1.prometheus monitoring/prometheus 2>/dev/null || true
+          # Grafana
+          terraform import $KP kubernetes_config_map.grafana monitoring/grafana-datasources 2>/dev/null || true
+          terraform import $KP kubernetes_deployment.grafana monitoring/grafana 2>/dev/null || true
+          terraform import $KP kubernetes_service.grafana monitoring/grafana 2>/dev/null || true
+          terraform import $KP kubernetes_ingress_v1.grafana monitoring/grafana 2>/dev/null || true
+          # Portainer
+          terraform import $KP kubernetes_service_account.portainer monitoring/portainer 2>/dev/null || true
+          terraform import $KP kubernetes_cluster_role_binding.portainer portainer 2>/dev/null || true
+          terraform import $KP kubernetes_deployment.portainer monitoring/portainer 2>/dev/null || true
+          terraform import $KP kubernetes_service.portainer monitoring/portainer 2>/dev/null || true
+          terraform import $KP kubernetes_ingress_v1.portainer monitoring/portainer 2>/dev/null || true
+          # MongoDB
+          terraform import $KP kubernetes_pod.mongodb prod/mongodb 2>/dev/null || true
+          terraform import $KP kubernetes_service.mongodb prod/mongodb 2>/dev/null || true
+          # OpenSearch
+          terraform import $KP kubernetes_pod.opensearch prod/opensearch 2>/dev/null || true
+          terraform import $KP kubernetes_service.opensearch prod/opensearch 2>/dev/null || true
+          # Graylog
+          terraform import $KP kubernetes_config_map.graylog prod/graylog-config 2>/dev/null || true
+          terraform import $KP kubernetes_pod.graylog prod/graylog 2>/dev/null || true
+          terraform import $KP kubernetes_service.graylog prod/graylog 2>/dev/null || true
+          # Nextcloud
+          terraform import $KP kubernetes_pod.nextcloud prod/nextcloud 2>/dev/null || true
+          terraform import $KP kubernetes_service.nextcloud prod/nextcloud 2>/dev/null || true
+          # MinIO
+          terraform import $KP kubernetes_deployment.minio prod/minio 2>/dev/null || true
+          terraform import $KP kubernetes_service.minio prod/minio 2>/dev/null || true
+          terraform import $KP kubernetes_ingress_v1.minio prod/minio 2>/dev/null || true
+          # HPA
+          terraform import $KP kubernetes_horizontal_pod_autoscaler_v2.n8n apps/n8n 2>/dev/null || true
+          terraform import $KP kubernetes_horizontal_pod_autoscaler_v2.grafana monitoring/grafana 2>/dev/null || true
+
       - name: Terraform Apply
         run: terraform apply -auto-approve -var="kubeconfig_path=$HOME/.kube/config"
 
