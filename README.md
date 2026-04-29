@@ -98,3 +98,19 @@ Le secret `KUBECONFIG` contient le fichier kubeconfig du cluster K3s encodé en 
 - Cluster K3s opérationnel
 - Secret GitHub `KUBECONFIG` configuré (Settings → Secrets and variables → Actions)
 - Terraform >= 1.5.0
+
+---
+
+## Responsabilités
+
+### Baptiste Bellanger
+- Mise en place de l'Infrastructure as Code (Terraform) — `providers.tf`, `variables.tf`, `main.tf`
+- Déploiement du namespace `monitoring` : Prometheus + Grafana avec RBAC et datasource provisionnée
+- Configuration de la pipeline CI/CD GitHub Actions
+- Configuration du secret `KUBECONFIG` et accès au cluster depuis GitHub
+
+### Arnaud Preci
+- Déploiement du namespace `apps` : n8n (deployment, service, ingress)
+- Déploiement du namespace `prod` : Graylog, OpenSearch, MongoDB, Nextcloud
+- Mise en place du sidecar de logs (Nextcloud → Graylog via TCP 5514)
+- Déploiement du dashboard Portainer avec ServiceAccount et ClusterRoleBinding
