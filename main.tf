@@ -20,6 +20,8 @@ resource "kubernetes_deployment" "n8n" {
     labels    = { app = "n8n" }
   }
 
+  wait_for_rollout = false
+
   spec {
     replicas = 1
 
@@ -232,6 +234,8 @@ resource "kubernetes_deployment" "prometheus" {
     labels    = { app = "prometheus" }
   }
 
+  wait_for_rollout = false
+
   spec {
     replicas = 1
 
@@ -364,6 +368,8 @@ resource "kubernetes_deployment" "grafana" {
     namespace = kubernetes_namespace.monitoring.metadata[0].name
     labels    = { app = "grafana" }
   }
+
+  wait_for_rollout = false
 
   spec {
     replicas = 1
@@ -874,6 +880,8 @@ resource "kubernetes_deployment" "minio" {
     labels    = { app = "minio" }
   }
 
+  wait_for_rollout = false
+
   spec {
     replicas = 1
 
@@ -1018,6 +1026,8 @@ resource "kubernetes_deployment" "portainer" {
     namespace = kubernetes_namespace.monitoring.metadata[0].name
     labels    = { app = "portainer" }
   }
+
+  wait_for_rollout = false
 
   spec {
     replicas = 1
