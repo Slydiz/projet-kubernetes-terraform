@@ -41,6 +41,7 @@ GitHub Actions (CI/CD)
 | `prod` | OpenSearch | Moteur d'indexation pour Graylog |
 | `prod` | MongoDB | Base de données pour Graylog |
 | `prod` | Nextcloud | Stockage de fichiers en ligne |
+| `prod` | MinIO | Stockage objet S3-compatible |
 
 ---
 
@@ -114,3 +115,4 @@ Le secret `KUBECONFIG` contient le fichier kubeconfig du cluster K3s encodé en 
 - Déploiement du namespace `prod` : Graylog, OpenSearch, MongoDB, Nextcloud
 - Mise en place du sidecar de logs (Nextcloud → Graylog via TCP 5514)
 - Déploiement du dashboard Portainer avec ServiceAccount et ClusterRoleBinding
+- Déploiement de MinIO (stockage objet S3-compatible) et intégration comme stockage externe Nextcloud

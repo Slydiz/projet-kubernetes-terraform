@@ -28,4 +28,10 @@ variable "domain_portainer" {
   default     = "portainer.local"
 }
 
+variable "domain_minio" {
+  description = "Domaine pour accéder à la console MinIO"
+  type        = string
+  default     = "minio.local"
+}
+
 
